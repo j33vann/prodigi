@@ -1,0 +1,131 @@
+<%- include("partials/header") %> 
+
+<%- include("partials/navbar") %> 
+
+<div class="section1">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <img src="/upload/<%= img %>" alt="">
+            </div>
+            <div class="col-lg-7">
+                <h1><%= title %></h1>
+                <h2>$<%= price %> <img src="/images/send.svg" style="width: 60px; border: 1px solid black; border-radius: 100px; padding: 10px; margin-left: 20px;" onclick="aff()"></h2>
+                <p><%= description %></p>
+                <form method="POST" action="" class="quanform">
+                    <div class="quant">
+                        <span class="btn-box form-control dec">-</span>
+                        <input class="form-control quantity" type="number" min="1" max="100" value="1" name="quantity">
+                        <span class="btn-box form-control inc">+</span>
+                    </div>
+                    <button>Add to Cart</button>
+                </form>
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body{
+        font-family: "Lato", Arial, sans-serif;
+    }
+    .row {
+        margin: 0;
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0; 
+    }
+    .form-control {
+        display: inline-block;
+        width: fit-content;
+    }
+
+    .section1 {
+        margin: 130px 0;
+    }
+    .section1 .col-lg-7{
+        padding: 10px 50px;
+    }
+    .section1 h1 {
+        font-size: 28px;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
+    .section1 h2 {
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+    }
+    .section1 h2 img:hover{
+        cursor: pointer;
+        box-shadow: 0 0 10px 5px lightgray;
+        transition: 0.3s;
+    }
+    .section1 p {
+        color: gray;
+    }
+    .section1 button {
+        color: white;
+        background-color: lightpink;
+        border: 2px solid lightpink;
+        padding: 20px 50px;
+        border-radius: 50px;
+    }
+    .section1 button:hover {
+        background-color: white;
+        color: lightpink;
+        border: 2px solid lightpink;
+        transition: 0.3s;
+    }
+    .quant {
+        margin: 30px 0;
+    }
+    .btn-box:hover {
+        cursor: pointer;
+        box-shadow: 0 0 5px 1px lightpink;
+    }
+    img {
+        width: -webkit-fill-available;
+    }
+</style>
+
+<% if(ref != "none"){ %>
+    <script>
+        $(".quanform").attr("action", window.location.pathname)
+    </script>
+<% } else { %>
+    <script>
+        $(".quanform").attr("action", window.location.pathname + "?aff=<%= ref %>")
+    </script>
+<% } %>
+
+<script>
+    $(".inc").click(function() {
+        var num = $(".quantity").val()
+        var inc = (parseInt(num) + 1)
+        $(".quantity").val(inc)
+    })
+    $(".dec").click(function() {
+        var num = $(".quantity").val()
+        if(parseInt(num) > 1) {
+            var inc = (parseInt(num) - 1)
+            $(".quantity").val(inc)
+        }
+    })
+    function aff(){
+        var aff = "none"
+        if("<%= uid %>" != "none"){
+            navigator.clipboard.writeText(window.location.href + "?aff=<%= uid %>")
+        } else {
+            navigator.clipboard.writeText(window.location.href)
+        }
+    }
+</script>
+
+<%- include("partials/footer") %>

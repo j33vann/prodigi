@@ -1,0 +1,196 @@
+<%- include("partials/header") %>
+
+<h1>MESSAGES</h1>
+
+<div class="section1">
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
+</div>
+
+<!-- Chatbox -->
+
+<div class="modal fade" id = "chatbox" role = "dialog" style="padding-right: 0; padding-left: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title col-12" style="position: relative;"> Chat <button class="btn btn-outline-dark clear-btn" style="position: absolute; right: 50px;">Clear</button><span style="color: gray; position: absolute; right: 10px; font-size: 18px; top: 10px; cursor: pointer;" onclick="$('#chatbox').modal('hide')">X</span></h3>
+            </div>
+            <div class="bg-light" id="messages" style="min-height: 400px; max-height: 400px; overflow-y: auto;">
+                <div class="reverse-order" style="padding: 0 10px;">
+                    
+                </div>
+            </div>
+            <form id="chatbox-input" action="/message" method="POST" autocomplete="off">
+                <a id="send-message">Send</a>
+                <textarea name="chat" id="chat" class="form-control" placeholder="Type your message here"></textarea>
+            </form>
+            <div class="form-id" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Chatbox -->
+<style>
+    body{
+        background-color: whitesmoke;
+        font-family: "Lato", Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        margin: 100px 0 50px 0;
+    }
+    .section1 .col-lg-4 {
+        margin: 0 0 30px 0;
+    }
+    .section1 .card {
+        padding: 20px;
+        border: 0;
+        box-shadow: 0 0 5px 1px lightgray;
+    }
+    .card h3, .card p {
+        color: black;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+                line-clamp: 1; 
+        -webkit-box-orient: vertical;
+        margin: 0;
+    }
+    .card p:first-child {
+        color: gray;
+    }
+    .card:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px 5px lightpink;
+        transition: 0.3s;
+    }
+
+    /* chat */
+
+    #chat{
+        border-top: 2px solid gray;
+        padding-right: 50px;
+    }
+    #send-message{
+        position: absolute; 
+        right: 20px; 
+        margin-top: 10px; 
+        text-decoration: none; 
+        color: #007bff; 
+        cursor: pointer;
+    }
+    .user-message{
+        display: block;
+        overflow-wrap: break-word;
+        background-color: rgb(240, 240, 240);
+        white-space: pre-line;
+        margin-left: auto;
+        margin-bottom: 0;
+        border-radius: 20px;
+        width: fit-content;
+        max-width: 60%;
+        margin-bottom: 7px;
+        padding: 8px 15px;
+    }
+    .admin-message{
+        display: block;
+        overflow-wrap: break-word;
+        background-color: rgb(216, 216, 216);
+        white-space: pre-line;
+        width: fit-content;
+        max-width: 60%;
+        border-radius: 20px;
+        margin-bottom: 7px;
+        padding: 8px 15px;
+    }
+    #chatbox ::-webkit-scrollbar {
+        width: 5px;
+    }
+    #chatbox ::-webkit-scrollbar-thumb {
+        background: gray;
+        border-radius: 10px;
+    }
+    
+    #messages{
+        display: flex; 
+        flex-direction: column-reverse;
+        width: 100%;
+        margin-left: auto;
+    }
+
+    /* chat */
+</style>
+
+<script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue , query, orderByKey, orderByChild, onChildAdded, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRL4xl-vh_B2NBcM9WLEBxmo94Fu85p_4",
+      authDomain: "prodigi-f043a.firebaseapp.com",
+      projectId: "prodigi-f043a",
+      storageBucket: "prodigi-f043a.appspot.com",
+      messagingSenderId: "666489036407",
+      appId: "1:666489036407:web:be1e36d31e64aefd04b072",
+      measurementId: "G-VYGXJQ5CBY",
+      databaseURL: "https://prodigi-f043a-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    
+    const db = getDatabase()
+
+    const q = query(ref(db, 'Messages'), orderByChild("time"));
+    onChildAdded(q, (snapshot) => {
+
+        const data = snapshot.val();
+        var date = new Date(data["time"]);
+        var keys = Object.keys(data)
+        var msgtext = data[keys[(keys.length -2)]]
+
+        $(".section1 .row").append('<div class="col-lg-4 ' + snapshot.key + '" data-target="#chatbox" data-toggle="modal"> <div class="card"> <p> ' + msgtext.message + ' </p> <p>' + date.toLocaleString() + '</p> </div> </div>')
+    
+        $("." + snapshot.key).click(function() {
+            $(".reverse-order").html("")
+            $(".form-id").text(snapshot.key)
+
+            const a = query(ref(db, 'Messages/' + snapshot.key), orderByKey());
+            onChildAdded(a, (snap) => {
+                const d = snap.val()
+                if(d["from"] == "admin") {
+                    $("<div class='user-message'>" + d["message"] + "</div>").appendTo(".reverse-order")
+                } else if (d["from"] == "user") {
+                    $("<div class='admin-message'>" + d["message"] + "</div>").appendTo(".reverse-order")
+                }
+            })
+        })
+    })
+
+    $("#send-message").click(function() {
+        var text = $("#chat").val()
+        var id = $(".form-id").text()
+
+        if(text.trim() != "" && id.trim() != ""){
+            set(ref(db, 'Messages/' + id + "/" + Date.now()), {
+                message: text,
+                from: "admin"
+            })
+            $("#chat").val("")
+        }
+    })
+
+    $(".clear-btn").click(function() {
+        var id = $(".form-id").text()
+        remove(ref(db, "Messages/" + id)).then(() => {
+            location.reload()
+        })
+    })
+</script>
+
+<%- include("partials/footer") %>

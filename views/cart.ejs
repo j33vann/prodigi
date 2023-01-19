@@ -1,0 +1,198 @@
+<%- include("partials/header") %>
+
+<div class="section1">
+    <div class="container">
+        <table class="table table-borderless">
+            <thead class="tead-light">
+              <tr>
+                <th></th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% var result = 0; %>
+                <% for(var i=0; i<cart.length; i++){ %>
+                    <% result += (cart[i].price * quant[i]); %>
+                    <tr>
+                        <th><img src="upload/<%= cart[i].image %>" alt=""></th>
+                        <td>
+                            <h3><%= cart[i].title %></h3>
+                            <p><%= cart[i].description %></p>
+                        </td>
+                        <td>$<%= cart[i].price %></td>
+                        <td><%= quant[i] %></td>
+                        <td>$<%= cart[i].price * quant[i] %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="section2">
+    <div class="container">
+        <div class="row">
+            <div style="margin-left: auto; margin-right: 20px;">
+                <div class="coupon-box">
+                    <h1>COUPON</h1>
+                    <div class="input-group mb-3" style="width: fit-content;">
+                        <input type="text" class="form-control" style="width: 300px;" placeholder="Enter Code" id="code">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark apply-btn">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="cart-total">
+                    <h1>CART TOTAL</h1>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>Subtotal</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p>$<%= result %></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>Delivery</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p>$00.00</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>Discount</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p>$<span class="disc">00.00</span></p>
+                        </div>
+                    </div>
+                    <p class="suc-disc" style="color: green; display: none;">You saved 15%</p>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p style="margin-bottom: 0;">TOTAL</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p style="margin-bottom: 0;">$<span class="total"><%= result %></span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-des">Proceed to Checkout</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<style>
+    body{
+        font-family: "Lato", Arial, sans-serif;
+        margin: 120px 0;
+    }
+    .row {
+        margin: 0;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    .section1 {
+        margin-bottom: 30px;
+    }
+    table {
+        text-align: center;
+    }
+    thead {
+        background-color: whitesmoke;
+    }
+    tbody tr {
+        border-top: 20px solid transparent;
+    }
+    table img {
+        max-width: 120px;
+    }
+    table td {
+        max-width: 200px;
+        vertical-align: middle!important;
+    }
+    td h3 {
+        font-weight: 300;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    td p{
+        color: gray;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+                line-clamp: 2; 
+        -webkit-box-orient: vertical;
+    }
+    .coupon-box {
+        margin-left: auto;
+    }
+    .coupon-box, .cart-total{
+        width: fit-content;
+        min-width: 450px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px;
+    }
+    .coupon-box h1, .cart-total h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+    }
+    .cart-total .col-lg-6 {
+        padding: 0;
+        color: gray;
+    }
+    .cart-total .row:last-child {
+        border-top: 1px solid lightgray;
+        padding-top: 15px;
+    }
+    .btn-des {
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        min-width: 450px;
+        color: white;
+        border: 2px solid lightpink;
+        padding: 15px;
+        background-color: lightpink;
+        border-radius: 50px;
+    }
+    .btn-des:hover {
+        color: lightpink;
+        background-color: white;
+        transition: 0.3s;
+    }
+</style>
+
+<script>
+    var discount = "nan";
+    $(".apply-btn").click(function() {
+        $.post("/coupon", {code: $("#code").val()}, function(data){
+            if(data != "no") {
+                discount = $("#code").val()
+                var tot = $(".total").text()
+                var res = parseInt(tot) * (parseInt(data)/100)
+                $(".total").text(tot-res)
+                $(".disc").text(res)
+                $(".suc-disc").text("You saved " + data + "%")
+                $(".suc-disc").css("display", "block")
+            }
+        })
+    })
+    $(".btn-des").click(function() {
+        window.location.replace("/pay/<%= uid %>/" + discount)
+        //$.post("/gopay", {disc: discount})
+    })
+</script>
+
+<%- include("partials/footer") %>

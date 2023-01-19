@@ -1,0 +1,110 @@
+<%- include("partials/header") %>
+
+<div class="section1">
+    <div class="container">
+        <h1>ADMIN PANEL</h1>
+        <div class="row">
+            <div class="col-lg-4">
+                <a href="/current-orders" style="box-shadow: 0 0 10px 5px lightblue; background-color: lightblue; ">
+                    <h4>Current Orders</h4>
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a href="/past-orders" style="box-shadow: 0 0 10px 5px lightcoral; background-color: lightcoral; ">
+                    <h4>Past Orders</h4>
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a href="/admin-chat" style="box-shadow: 0 0 10px 5px lightgreen; background-color: lightgreen; ">
+                    <h4>Messages</h4>
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a href="/upload-product" style="box-shadow: 0 0 10px 5px lightpink; background-color: lightpink; ">
+                    <h4>Add Product</h4>
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a style="box-shadow: 0 0 10px 5px lightsalmon; background-color: lightsalmon;" data-toggle="modal" data-target="#add-coupon">
+                    <h4>Add Coupon</h4>
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <a style="box-shadow: 0 0 10px 5px lightslategray; background-color: lightslategray;" data-toggle="modal" data-target="#delete-coupon">
+                    <h4>Delete Coupon</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id = "delete-coupon" role = "dialog" style="padding-right: 0; padding-left: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title col-12" style="position: relative;"> Delete Coupon <span style="color: gray; position: absolute; right: 10px; font-size: 18px; top: 10px; cursor: pointer;" onclick="$('#delete-coupon').modal('hide')">X</span></h3>
+            </div>
+            <form class="input-group" style="padding: 30px;" action="/delete-coupon" method="POST">
+                <input type="text" class="form-control search-input" placeholder="Enter Code" name="code">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark delete-btn">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id = "add-coupon" role = "dialog" style="padding-right: 0; padding-left: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title col-12" style="position: relative;"> Add Coupon <span style="color: gray; position: absolute; right: 10px; font-size: 18px; top: 10px; cursor: pointer;" onclick="$('#add-coupon').modal('hide')">X</span></h3>
+            </div>
+            <form style="padding: 30px;" action="/add-coupon" method="POST">
+                <input type="text" class="form-control search-input" placeholder="Enter Code" name="code">
+                <input type="text" class="form-control off-input" placeholder="Enter Percentage" name="off" style="margin-top: 10px;">
+                <button class="btn btn-dark add-btn" style="margin-top: 10px;">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body{
+        font-family: "Lato", Arial, sans-serif;
+    }
+    .row {
+        margin: 0;
+    }
+
+    .section1 {
+        margin: 100px 0;
+        text-align: center;
+    }
+    .section1 h1 {
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+    }
+    .section1 a{
+        color: black; 
+        border-radius: 10px; 
+        padding: 50px; 
+        display: block;
+        margin: 20px 0;
+    }
+    .section1 a:hover {
+        text-decoration: none;
+        box-shadow: 0 0 15px 5px beige!important;
+        background-color: beige!important;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .section1 h4 {
+        font-size: 20px;
+        font-weight: 300;
+        text-transform: uppercase;
+        margin: 0;
+    }
+</style>
+
+<%- include("partials/footer") %>

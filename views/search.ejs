@@ -1,0 +1,149 @@
+<%- include("partials/header") %>
+<%- include("partials/navbar") %>
+
+<div class="container" style="margin-top: 150px;">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="price-box">
+                <h3 style="font-size: 20px; margin-bottom: 15px; border-bottom: 1px solid lightgray; padding-bottom: 10px;">Filter by Price</h3>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control min" placeholder="Min">
+                    </div>
+                    <span style="padding: 0 10px; display: flex; align-items: center;"> - </span>
+                    <div class="col">
+                        <input type="text" class="form-control max" placeholder="Max">
+                    </div>
+                    <button class="btn btn-dark go-btn" style="margin-left: 10px;">Go</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="input-group" style="width: fit-content; margin: 15px; margin-bottom: 40px;">
+                <input type="text" class="form-control search-input" style="width: 450px;" placeholder="Enter search terms">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark search-btn">Search</button>
+                </div>
+            </div>
+            <div class="row">
+                <% var titlearr = []; var arr = []; var pricearr = []; var i = 0; %> 
+                <% product.forEach((doc) => { %>
+                    <% titlearr[i] = doc.title; arr[i] = doc; pricearr[i] = doc.price; i += 1; %> 
+                    <div class="col-lg-4" style="margin-bottom: 20px;">
+                        <a href="/product/<%= doc._id %>">
+                            <div class="card">
+                                <div class="card-img-top">
+                                    <img src="images/<%= doc.image %>" alt="">
+                                </div>
+                                <div class="card-body">
+                                    <h3 style="text-transform: uppercase;"><%= doc.title %></h3>
+                                    <div class="cont">
+                                        <p>$<%= doc.price %></p>
+                                        <div class="rating">
+                                            <span>✩</span>
+                                            <span>✩</span>
+                                            <span>✩</span>
+                                            <span>✩</span>
+                                            <span>✩</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body{
+        font-family: "Lato", Arial, sans-serif;
+        margin: 70px 0;
+    }
+    img {
+        width: -webkit-fill-available;
+    }
+    .row {
+        margin: 0;
+    }
+    a{
+        color: black;
+    }
+    a:hover{
+        color: black;
+        text-decoration:none;
+    }
+
+    .col-lg-3 .col{
+        padding: 0;
+    }
+
+    .col-lg-9 .card {
+        border: 0;
+    }
+    .col-lg-9 .card:hover{
+        box-shadow: 0 0 10px 5px lightpink;
+        transition: 0.5s;
+    }
+    .col-lg-9 .card-img-top {
+        max-height: 400px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+    .col-lg-9 img {
+        width: -webkit-fill-available;
+    }
+    .col-lg-9 .cont{
+        display: flex;
+    }
+    .col-lg-9 .rating {
+        margin-left: auto;
+    }
+    .col-lg-9 .card h3{
+        font-size: 16px;
+        font-weight: 300;
+    }
+    .col-lg-9 p{
+        margin-bottom: 0;
+    }
+</style>
+
+<script>
+    $(".search-btn").click(function() {
+        var flag1 = false;
+        <% for(var i=0; i<arr.length; i++){ %>
+            if("<%= titlearr[i] %>".toLowerCase().indexOf($(".search-input").val().trim().toLowerCase()) >= 0){
+                console.log("<%= titlearr[i] + i %>" + " " + $(".search-input").val().trim())
+                if(!flag1){
+                    $(".col-lg-9 .row").html("")
+                    flag1 = true
+                }
+                $(".col-lg-9 .row").append('<div class="col-lg-4" style="margin-bottom: 20px;"><a href="/product/<%= arr[i]._id %>"><div class="card"><div class="card-img-top"><img src="images/<%= arr[i].image %>" alt=""></div><div class="card-body"><h3 style="text-transform: uppercase;"><%= arr[i].title %></h3><div class="cont"><p>$<%= arr[i].price %></p><div class="rating"><span>✩</span><span>✩</span><span>✩</span><span>✩</span><span>✩</span></div></div></div></div></a></div>')
+            }
+        <% } %>
+    })
+    
+    $(".go-btn").click(function(){
+        var flag2 = false;
+        <% for(var i=0; i<arr.length; i++){ %>
+            if($(".min").val().trim() != "" && $(".max").val().trim() != ""){
+                if(parseInt("<%= pricearr[i] %>") >= parseInt($(".min").val().trim()) && parseInt("<%= pricearr[i] %>") <= parseInt($(".max").val().trim())){
+                    if(!flag2){
+                        $(".col-lg-9 .row").html("")
+                        flag2 = true
+                    }
+                    $(".col-lg-9 .row").append('<div class="col-lg-4" style="margin-bottom: 20px;"><a href="/product/<%= arr[i]._id %>"><div class="card"><div class="card-img-top"><img src="images/<%= arr[i].image %>" alt=""></div><div class="card-body"><h3 style="text-transform: uppercase;"><%= arr[i].title %></h3><div class="cont"><p>$<%= arr[i].price %></p><div class="rating"><span>✩</span><span>✩</span><span>✩</span><span>✩</span><span>✩</span></div></div></div></div></a></div>')
+                }
+            } else {
+                alert("Please enter all the values")
+            }
+        <% } %>
+    })
+</script>
+
+
+
+<%- include("partials/footer") %>

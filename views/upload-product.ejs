@@ -1,0 +1,50 @@
+<%- include("partials/header") %>
+
+<div class="container">
+    <form action="/upload-product" method="POST" enctype="multipart/form-data">
+        <h1>UPLOAD PRODUCT</h1>
+        <input type="text" name="title" placeholder="Title">
+        <textarea type="text" name="description" placeholder="Description"></textarea>
+        <input type="text" name="price" placeholder="Price">
+        <input type="file" name="image">
+        <button class="btn btn-light" style="margin-top: 10px; width: 100%;">Submit</button>
+    </form>
+</div>
+
+<style>
+    body {
+        background-color: black;
+    }
+    form{
+        backdrop-filter: blur(10px);
+        background-color: rgba(255,255,255,0.13);
+        max-width: 600px; 
+        padding: 30px; 
+        margin: 50px auto;
+    }
+    form h1{
+        color: white;
+        font-weight: 300;
+        font-size: 22px;
+        letter-spacing: 2px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    textarea, input{
+        display: block;
+        height: 50px;
+        width: 100%;
+        background-color: rgba(255,255,255,0.07);
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+        color: white;
+    }
+    ::placeholder{
+        color: #e5e5e5;
+    }
+</style>
+
+<%- include("partials/footer") %>

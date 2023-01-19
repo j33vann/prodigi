@@ -1,0 +1,151 @@
+<%- include("partials/header") %>
+
+<div class="section1">
+    <div class="container">
+        <form action="/create-order" method="POST">
+            <% if(deli == "no"){ %>
+                <div class="address-box">
+                    <h3 style="margin-bottom: 20px; letter-spacing: 2px;">BILLING DETAILS</h3>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding-left: 0;">
+                            <p>Name</p>
+                            <input type="text" class="form-control" name="username">
+                        </div>
+                        <div class="col-lg-6" style="padding-right: 0;">
+                            <p>Number</p>
+                            <input type="text" class="form-control" name="number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6" style="padding-left: 0;">
+                            <p>City</p>
+                            <input type="text" class="form-control" name="city">
+                        </div>
+                        <div class="col-lg-6" style="padding-right: 0;">
+                            <p>State</p>
+                            <input type="text" class="form-control" name="state">
+                        </div>
+                    </div>
+                    <p>Street Address</p>
+                    <input type="text" class="form-control" name="address">
+                    <div class="row">
+                        <div class="col-lg-6" style="padding-left: 0;">
+                            <p>Country</p>
+                            <input type="text" class="form-control" name="country">
+                        </div>
+                        <div class="col-lg-6" style="padding-right: 0;">
+                            <p>Pincode</p>
+                            <input type="text" class="form-control" name="pincode">
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            <div class="row" style="max-width: 942px; margin-left: auto; margin-right: auto;">
+                <div class="send-link">
+                    <h4>SEND LINK</h4>
+                    <p style="color: gray; letter-spacing: 1px; font-size: 16px;">Share link to anyone and let them buy it for you. They can't see what's in your bag ;)</p>
+                    <div class="input-group mb-3" style="width: fit-content;">
+                        <input type="text" class="form-control link-input" style="width: 300px;" disabled>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark copy-btn" type="button">Copy</button>
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="pay-box">
+                    <h4>PAYMENT METHODS</h4>
+                    <div>
+                        <label for="debit">
+                            <input type="radio" class="rad-btn" id="debit">
+                            Debit Card
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" class="rad-btn" id="netbanking">
+                            Netbanking
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" class="rad-btn" id="netbanking">
+                            Cash on Delivery
+                        </label>
+                    </div>
+                    <input class="coupo" type="text" hidden disabled name="coupo">
+                    <button class="btn-des" type="submit">Pay Now</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body{
+        font-family: "Lato", Arial, sans-serif;
+        margin: 70px 0;
+    }
+    .row {
+        margin: 0;
+    }
+
+    .section1 p{
+        margin-top: 20px;
+    }
+    .address-box {
+        background-color: #f8f9fa;
+        padding: 30px;
+        max-width: 942px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+
+
+    .send-link, .pay-box {
+        width: fit-content;
+        min-width: 450px;
+        max-width: 450px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px;
+    }
+    .btn-des{
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        min-width: 450px;
+        color: white;
+        border: 2px solid lightpink;
+        padding: 15px;
+        background-color: lightpink;
+        border-radius: 50px;
+    }
+    .btn-des:hover {
+        color: lightpink;
+        background-color: white;
+        transition: 0.3s;
+    }
+    h4 {
+        margin-bottom: 20px;
+    }
+    label {
+        color: gray;
+    }
+</style>
+
+<script>
+    $(".link-input").val(window.location.href)
+    
+    $(".copy-btn").click(function(){
+        navigator.clipboard.writeText(window.location.href)
+    })
+
+    $(".rad-btn").click(function(){
+        $(".rad-btn").prop("checked", false)
+        $(this).prop("checked", true)
+    })
+    var loc = window.location.pathname.split("/").pop()  
+    $(".coupo").val(loc)
+</script>
+
+<%- include("partials/footer") %>

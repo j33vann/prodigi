@@ -1,0 +1,65 @@
+<%- include("partials/header") %>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Product Id</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Address</th>
+        <th scope="col">Date</th>
+        <th scope="col">Fulfilled</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% var i = 1; %>
+        <% doc.forEach((doc) => { %>
+            <tr>
+                <th scope="row"><%= i %></th>
+                <td>
+                    <% doc.productid.forEach((pro) => { %>
+                        <%= doc.productid[0].id %>
+                        |
+                    <% }) %>
+                </td>
+                <td>
+                    <% doc.productid.forEach((pro) => { %>
+                        <%= doc.productid[0].quantity %>
+                        |
+                    <% }) %>
+                </td>
+                <td style="color: #007bff; text-decoration: underline; cursor: pointer;" data-target="#address-modal" data-toggle="modal" onclick="req('<%= doc.userid %>')">View Address</td>
+                <% var d = new Date(parseInt(doc.time)); %>
+                <td><%= d.toString() %></td>
+                <td><button class="btn btn-success" onclick="done('<%= doc.id %>')">Done</button></td>
+            </tr>
+        <% i += 1 %>
+        <% }) %>
+    </tbody>
+</table>
+
+<div class="modal fade" id = "address-modal" role = "dialog" style="padding-right: 0; padding-left: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title col-12" style="position: relative;"> Address <span style="color: gray; position: absolute; right: 10px; font-size: 18px; top: 10px; cursor: pointer;" onclick="$('#address-modal').modal('hide')">X</span></h3>
+            </div>
+            <p class="address" style="padding: 30px; margin: 0;">Loading...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function req(str){
+        $.post("/get-address", {id: str}, function(data){
+            $(".address").html(data.mobile_number + "<br>" + data.house_address + "<br>" + data.address_city + ", " + data.address_state + "<br>" + data.address_country)
+        })
+    }
+    function done(str){
+        $.post("/update-order-done", {id: str}, function(data){
+            location.reload()
+        })
+    }
+</script>
+
+<%- include("partials/footer") %> 
